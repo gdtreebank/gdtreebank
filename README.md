@@ -1,1 +1,1 @@
-# gdtreebankImplementation of the paper "The Galactic Dependencies Treebanks: Getting More Data by Synthesizing New Languages" by Dingquan Wang and Jason Eisner. TACL 2016
+# gdtreebankImplementation of the paper "The Galactic Dependencies Treebanks: Getting More Data by Synthesizing New Languages" by Dingquan Wang and Jason Eisner. TACL 2016For the data release, please visit doi:10.7910/DVN/8ZT5KF
