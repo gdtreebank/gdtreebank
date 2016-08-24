@@ -79,6 +79,7 @@ public class GalacticGen {
 
     public void train() throws Exception {
         TreeBank treeBank = new TreeBank(TreeBank.DEFAULT_ROOT);
+        Constant.ruleLength = Integer.MAX_VALUE;
         treeBank.readTreesInUniversalConLLFormat(inputTB);
         treeBank.cut(Constant.numSentencesPerTB);
         LogLinearXYPrm prm = new LogLinearXYPrm();

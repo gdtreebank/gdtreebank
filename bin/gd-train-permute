@@ -1,0 +1,46 @@
+#!/usr/bin/python
+# --------------------------------------- 
+# File Name : gd-train-permute.py
+# Creation Date : 24-08-2016
+# Last Modified : Wed Aug 24 14:34:45 2016
+# Created By : wdd 
+# --------------------------------------- 
+import argparse
+import os
+from subprocess import call
+
+_arg_parser = argparse.ArgumentParser()
+_arg_parser.add_argument('--input', default='', type=str, action='store', help='Nnput treebank for training')
+_arg_parser.add_argument('--node', default='N', type=str, action='store', help='Node to be trained on: \n'
+                                                                               'N (default): noun (common noun), propn (proper noun) and pron (pronoun)' +
+                                                                               'V: verb')
+_arg_parser.add_argument('--mem', default='8g', type=str, action='store', help='Memory for training. (default=8g)')
+_arg_parser.add_argument('--model', default='', type=str, action='store',
+                         help='Model ouput. will be input@node.orm if not specified')
+_arg_parser.add_argument('--seed', default='0', type=str, action='store', help='Random seed')
+_arg_parser.add_argument('--verbose', default='1', type=str, action='store', help='Verbosity level')
+_args = _arg_parser.parse_args()
+
+
+def main():
+    root_dir = os.environ.get('GALACTIC_ROOT', '.')
+    arg_dict = {
+        'bin': root_dir + os.sep + 'bin' + os.sep,
+        'model': root_dir + os.sep + 'models' + os.sep,
+    }
+    arg_dict.update(vars(_args))
+    arg_dict['node'] = 'NOUN' if _args.node == 'N' else 'VERB'
+    input_prfx = os.path.dirname(_args.input) + os.path.basename(_args.input).split('.')[0]
+    arg_dict['model'] = input_prfx + '@%s.orm' % _args.node if _args.model == '' else _args.model
+    command = 'java -cp %(bin)sgdgen.jar -Xmx%(mem)s datagen.GalacticGen ' \
+              '--task train ' \
+              '--inputTB %(input)s ' \
+              '--modelPath %(model)s ' \
+              '--targetNode %(node)s ' \
+              '--verbose %(verbose)s ' \
+              '--seed %(seed)s' % arg_dict
+    print command
+    call(command, shell=True)
+
+
+if __name__ == "__main__": main()
