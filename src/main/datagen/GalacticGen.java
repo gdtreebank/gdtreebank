@@ -63,13 +63,17 @@ public class GalacticGen {
     @Opt(hasArg = true, description = "Maximum children number a node to be considered")
     public static int maxChildrenNum = 6;
 
-    @Opt(hasArg = true, description = "Input NOUN-permutation model trained from superstrate")
+    @Opt(hasArg = true, description = "Input NOUN-permutation model trained from superstrate\n" +
+            "WARNING:NOUN won't be permuted if the file doesn't exist")
     public static File supStrateModelNOUN = new File("superstrate@N.orm");
-    @Opt(hasArg = true, description = "Input VERB-permutation model trained from superstrate")
+    @Opt(hasArg = true, description = "Input VERB-permutation model trained from superstrate\n" +
+            "WARNING:VERB won't be permuted if the file doesn't exist")
     public static File supStrateModelVERB = new File("superstrate@V.orm");
-    @Opt(hasArg = true, description = "Input NOUN-permutation model trained from substrate")
+    @Opt(hasArg = true, description = "Input NOUN-permutation model trained from substrate\n" +
+            "WARNING:NOUN won't be permuted if the file doesn't exist")
     public static File subStrateModelNOUN = new File("substrate@N.orm");
-    @Opt(hasArg = true, description = "Input VERB-permutation model trained from substrate")
+    @Opt(hasArg = true, description = "Input VERB-permutation model trained from substrate\n" +
+            "WARNING:VERB won't be permuted if the file doesn't exist")
     public static File subStrateModelVERB = new File("substrate@V.orm");
     @Opt(hasArg = true, description = "Combination rate for substrate and superstrate\n" +
             "param = (1-lambda)*param_superstrate + lambda*param_substrate")
@@ -110,7 +114,7 @@ public class GalacticGen {
         } catch (IOException e) {
         }
 
-        log.info("permutable Headers:" + StringUtils.join(permutable, " "));
+        log.info("permutable Nodes:" + StringUtils.join(permutable, " "));
         return ret;
     }
 
@@ -125,7 +129,7 @@ public class GalacticGen {
         Constant.srcName = inputTB.getName();
         inputTreeBank.readTreesInUniversalConLLFormat(Constant.numSentencesPerTB, inputTB);
         // Permute Training data
-        TreeBank permutedTreeBank = inputTreeBank.permuteV5(Prng.javaRandom, permute_model);
+        TreeBank permutedTreeBank = permute_model.size() > 0 ? inputTreeBank.permuteV5(Prng.javaRandom, permute_model) : inputTreeBank;
         // Save to train file
         permutedTreeBank.writeLabelled(outputTB);
     }

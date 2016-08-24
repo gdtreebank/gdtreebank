@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # --------------------------------------- 
-# File Name : gd-train-permute.py
+# File Name : gd-train-permute
 # Creation Date : 24-08-2016
 # Last Modified : Wed Aug 24 14:34:45 2016
 # Created By : wdd 
@@ -10,7 +10,7 @@ import os
 from subprocess import call
 
 _arg_parser = argparse.ArgumentParser()
-_arg_parser.add_argument('--input', default='', type=str, action='store', help='Nnput treebank for training')
+_arg_parser.add_argument('--input', default='', type=str, action='store', help='Input treebank for training')
 _arg_parser.add_argument('--node', default='N', type=str, action='store', help='Node to be trained on: \n'
                                                                                'N (default): noun (common noun), propn (proper noun) and pron (pronoun)' +
                                                                                'V: verb')
@@ -26,7 +26,6 @@ def main():
     root_dir = os.environ.get('GALACTIC_ROOT', '.')
     arg_dict = {
         'bin': root_dir + os.sep + 'bin' + os.sep,
-        'model': root_dir + os.sep + 'models' + os.sep,
     }
     arg_dict.update(vars(_args))
     arg_dict['node'] = 'NOUN' if _args.node == 'N' else 'VERB'

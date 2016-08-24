@@ -1,0 +1,90 @@
+#!/usr/bin/python
+# --------------------------------------- 
+# File Name : gd-translate
+# Creation Date : 24-08-2016
+# Last Modified : Wed Aug 24 14:32:44 2016
+# Created By : wdd 
+# --------------------------------------- 
+import argparse
+import os
+from subprocess import call
+
+_arg_parser = argparse.ArgumentParser()
+_arg_parser.add_argument('--input', default='', type=str, action='store', help='Input treebank for training')
+_arg_parser.add_argument('--spec', default='', type=int, action='store', help='')
+_arg_parser.add_argument('--output', default='', type=str, action='store', help='Ontput treebank after permutation:\n'
+                                                                                '(default) input-spec.conllu')
+_arg_parser.add_argument('--seed', default='0', type=str, action='store', help='Random seed')
+_args = _arg_parser.parse_args()
+
+udtv12_map = {
+    "grc": "GD_Ancient_Greek",
+    "grc_proiel": "GD_Ancient_Greek-PROIEL",
+    "ar": "GD_Arabic",
+    "eu": "GD_Basque",
+    "bg": "GD_Bulgarian",
+    "hr": "GD_Croatian",
+    "cs": "GD_Czech",
+    "da": "GD_Danish",
+    "nl": "GD_Dutch",
+    "en": "GD_English",
+    "et": "GD_Estonian",
+    "fi": "GD_Finnish",
+    "fi_ftb": "GD_Finnish-FTB",
+    "fr": "GD_French",
+    "de": "GD_German",
+    "got": "GD_Gothic",
+    "el": "GD_Greek",
+    "he": "GD_Hebrew",
+    "hi": "GD_Hindi",
+    "hu": "GD_Hungarian",
+    "id": "GD_Indonesian",
+    "ga": "GD_Irish",
+    "it": "GD_Italian",
+    "ja_ktc": "GD_Japanese-KTC",
+    "la": "GD_Latin",
+    "la_itt": "GD_Latin-ITT",
+    "la_proiel": "GD_Latin-PROIEL",
+    "no": "GD_Norwegian",
+    "cu": "GD_Old_Church_Slavonic",
+    "fa": "GD_Persian",
+    "pl": "GD_Polish",
+    "pt": "GD_Portuguese",
+    "ro": "GD_Romanian",
+    "sl": "GD_Slovenian",
+    "es": "GD_Spanish",
+    "sv": "GD_Swedish",
+    "ta": "GD_Tamil",
+}
+
+
+def main():
+    root_dir = os.environ.get('GALACTIC_ROOT', '.')
+    arg_dict = {
+        'bin': root_dir + os.sep + 'bin' + os.sep,
+        'model': root_dir + os.sep + 'models' + os.sep,
+    }
+    arg_dict.update(vars(_args))
+    input_prfx = os.path.dirname(_args.input) + os.path.basename(_args.input).split('.')[0]
+    arg_dict['output'] = input_prfx + '-%s.conllu' % _args.spec if _args.output == '' else _args.output
+    command = 'java -cp %(bin)sgdgen.jar -Xmx%(mem)s datagen.GalacticGen ' \
+              '--task train ' \
+              '--inputTB %(input)s ' \
+              '--verbose %(verbose)s ' \
+              '--seed %(seed)s'
+    spec_list = _args.spec.split('~')[0]
+    sub = spec_list[0]
+    for sup in spec_list[1:]:
+        sup_lang, node = sup.split('@')
+        if node == 'N':
+            command += '\n--supStrateModelNOUN %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
+            command += '\n--subStrateModelNOUN %(model)s' + udtv12_map[sub] + os.sep + sub + '@N.orm'
+        if node == 'V':
+            command += '\n--supStrateModelVERB %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
+            command += '\n--subStrateModelVERB %(model)s' + udtv12_map[sub] + os.sep + sub + '@V.orm'
+    command = command % arg_dict
+    print command
+    call(command, shell=True)
+
+
+if __name__ == "__main__": main()
