@@ -68,7 +68,7 @@ def main():
     input_prfx = os.path.dirname(_args.input) + os.path.basename(_args.input).split('.')[0]
     arg_dict['output'] = input_prfx + '-%s.conllu' % _args.spec if _args.output == '' else _args.output
     command = 'java -cp %(bin)sgdgen.jar -Xmx%(mem)s datagen.GalacticGen ' \
-              '--task train ' \
+              '--task test ' \
               '--inputTB %(input)s ' \
               '--verbose %(verbose)s ' \
               '--seed %(seed)s'
