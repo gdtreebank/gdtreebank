@@ -11,10 +11,12 @@ from subprocess import call
 
 _arg_parser = argparse.ArgumentParser()
 _arg_parser.add_argument('--input', default='', type=str, action='store', help='Input treebank for training')
-_arg_parser.add_argument('--spec', default='', type=int, action='store', help='')
+_arg_parser.add_argument('--spec', default='', type=str, action='store', help='')
+_arg_parser.add_argument('--mem', default='8g', type=str, action='store', help='Memory for training. (default=8g)')
 _arg_parser.add_argument('--output', default='', type=str, action='store', help='Ontput treebank after permutation:\n'
                                                                                 '(default) input-spec.conllu')
 _arg_parser.add_argument('--seed', default='0', type=str, action='store', help='Random seed')
+_arg_parser.add_argument('--verbose', default='1', type=str, action='store', help='Verbosity level')
 _args = _arg_parser.parse_args()
 
 udtv12_map = {
@@ -72,16 +74,16 @@ def main():
               '--inputTB %(input)s ' \
               '--verbose %(verbose)s ' \
               '--seed %(seed)s'
-    spec_list = _args.spec.split('~')[0]
+    spec_list = _args.spec.split('~')
     sub = spec_list[0]
     for sup in spec_list[1:]:
         sup_lang, node = sup.split('@')
         if node == 'N':
-            command += '\n--supStrateModelNOUN %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
-            command += '\n--subStrateModelNOUN %(model)s' + udtv12_map[sub] + os.sep + sub + '@N.orm'
+            command += ' --supStrateModelNOUN %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
+            command += ' --subStrateModelNOUN %(model)s' + udtv12_map[sub] + os.sep + sub + '@N.orm'
         if node == 'V':
-            command += '\n--supStrateModelVERB %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
-            command += '\n--subStrateModelVERB %(model)s' + udtv12_map[sub] + os.sep + sub + '@V.orm'
+            command += ' --supStrateModelVERB %(model)s' + udtv12_map[sup_lang] + os.sep + sup + '.orm'
+            command += ' --subStrateModelVERB %(model)s' + udtv12_map[sub] + os.sep + sub + '@V.orm'
     command = command % arg_dict
     print command
     call(command, shell=True)
