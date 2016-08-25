@@ -72,6 +72,7 @@ def main():
     command = 'java -cp %(bin)sgdgen.jar -Xmx%(mem)s datagen.GalacticGen ' \
               '--task test ' \
               '--inputTB %(input)s ' \
+              '--outputTB %(output)s ' \
               '--verbose %(verbose)s ' \
               '--seed %(seed)s'
     spec_list = _args.spec.split('~')
