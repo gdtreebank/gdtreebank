@@ -29,7 +29,7 @@ def main():
     }
     arg_dict.update(vars(_args))
     arg_dict['node'] = 'NOUN' if _args.node == 'N' else 'VERB'
-    input_prfx = os.path.dirname(_args.input) + os.path.basename(_args.input).split('.')[0]
+    input_prfx = os.path.dirname(_args.input) + os.sep + os.path.basename(_args.input).split('.')[0]
     arg_dict['model'] = input_prfx + '@%s.orm' % _args.node if _args.model == '' else _args.model
     command = 'java -cp %(bin)sgdgen.jar -Xmx%(mem)s datagen.GalacticGen ' \
               '--task train ' \
