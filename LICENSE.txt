@@ -1,0 +1,22 @@
+Galactic Dependencies v1.0 (referred to as “GD” in the rest of this 
+document) is a collection of linguistic data and tools.  Each dataset 
+within GD has its own license terms and you (the “User”) are responsible 
+for complying with the license terms applicable to those parts of GD 
+that you use. If you do not agree with the license terms, you must stop 
+using GD and destroy all copies of GD data that you have obtained. 
+
+Each GD dataset is adapted from a specific treebank that is 
+distributed as part of the Universal Dependencies v1.2 collection 
+(referred to as “UD” in the rest of this document).  Each GD dataset is 
+licensed under the same terms as the UD treebank from which it is 
+derived.  The license for each dataset is provided in its directory.
+
+An overview of the UD treebanks and their license terms can be found at
+https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-1.2.
+
+You are specifically reminded that some of the treebanks permit only 
+non-commercial usage.
+
+The additional software tools are provided as-is (without any warranty) 
+and are licensed under GNU GPL Version 3 or any later version.  GNU GPL 
+Version 3 can be found at https://www.gnu.org/licenses/gpl-3.0.en.html.
