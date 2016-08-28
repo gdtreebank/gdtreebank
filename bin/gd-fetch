@@ -1,0 +1,76 @@
+#!/usr/bin/python
+# ---------------------------------------
+# File Name : gd-fetch
+# Creation Date : 27-08-2016
+# Last Modified : Sat Aug 27 23:40:47 2016
+# Created By : wdd 
+# --------------------------------------- 
+import argparse
+import os
+import urllib2
+import json
+import unicodedata
+import re
+from subprocess import call
+
+root_dir = os.environ.get('GALACTIC_ROOT', '.')
+_arg_parser = argparse.ArgumentParser()
+_arg_parser.add_argument('--substrate', default=['ALL'], nargs='+', type=str, action='store',
+                         help='List of subtrate languages to be downloaded:\n'
+                              'ALL: (default) Download all languages (Warning: This yields 80G compressed file and 700+G after extraction).\n'
+                              'GD_Language1 ... GD_LanguageN: Download GD_Langugage1 to GD_LanguageN\n'
+                              'if it is GD_Language.tar.bz2, it is a specific file. See http://dx.doi.org/10.7910/DVN/8ZT5KF for the full file list.\n'
+                              'Otherwise, it will be the full set of GD_Language')
+_arg_parser.add_argument('--pipeline', default=['download', 'extract', 'delete'], nargs='+', type=str, action='store',
+                         help='Pipeline for downloading the data:\n'
+                              'download extract clean: (default) Download, extract and then delete the compressed file')
+_arg_parser.add_argument('--cache', default=root_dir + '/.tmp', type=str, action='store',
+                         help='Directory to store the zipped file (default = $GALACTIC_ROOT)/.tmp')
+_arg_parser.add_argument('--output', default=root_dir, type=str, action='store',
+                         help='Directory to store the data (default = $GALACTIC_ROOT))')
+_args = _arg_parser.parse_args()
+
+
+def main():
+    url = 'https://dataverse.harvard.edu/api/datasets/:persistentId?persistentId=doi:10.7910/DVN/8ZT5KF'
+    metadata = json.load(urllib2.urlopen(url))
+
+    def _to_uni(s):
+        return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+
+    file2id = dict((_to_uni(entry[u'dataFile'][u'filename']), entry[u'dataFile'][u'id'])
+                   for entry in metadata[u'data'][u'latestVersion'][u'files'])
+    file_set = set()
+    if 'ALL' in _args.substrate:
+        file_set.update(file2id.keys())
+    else:
+        for lang in _args.substrate:
+            if lang.endswith('.tar.bz2'):
+                file_set.add(lang)
+            else:
+                p = re.compile('%s.\d+.tar.bz2' % lang)
+                file_set.update(filter(lambda x: p.match(x), file2id.keys()))
+    download_url = 'https://dataverse.harvard.edu/api/access/datafile/%i'
+    call('mkdir -p %s' % _args.cache, shell=True)
+    tar_files = []
+    for file in file_set:
+        file_path = os.path.join(_args.cache, file)
+        tar_files += [file_path]
+        if 'download' in _args.pipeline:
+            if os.path.isfile(file_path):
+                print '%s already exists' % file_path
+            else:
+                file_url = download_url % file2id[file]
+                print 'Downloading:%s\nFrom:%s\nTo:%s' % (file, file_url, file_path)
+                call('curl %s > %s' % (file_url, file_path), shell=True)
+    if 'extract' in _args.pipeline:
+        call('mkdir -p %s' % _args.output, shell=True)
+        for file in tar_files:
+            print 'Unzipping %s' % file
+            call('tar -xvf %s -C %s' % (file, _args.output), shell=True)
+        if 'clean' in _args.pipeline:
+            print 'Deleting: %s' % _args.cache
+            call('rm -r %s' % _args.cache, shell=True)
+
+
+if __name__ == "__main__": main()
