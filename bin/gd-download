@@ -21,9 +21,9 @@ _arg_parser.add_argument('--substrate', default=['ALL'], nargs='+', type=str, ac
                               'GD_Language1 ... GD_LanguageN: Download GD_Langugage1 to GD_LanguageN\n'
                               'if it is GD_Language.tar.bz2, it is a specific file. See http://dx.doi.org/10.7910/DVN/8ZT5KF for the full file list.\n'
                               'Otherwise, it will be the full set of GD_Language')
-_arg_parser.add_argument('--pipeline', default=['download', 'unzip', 'delete'], nargs='+', type=str, action='store',
+_arg_parser.add_argument('--pipeline', default=['download', 'extract', 'delete'], nargs='+', type=str, action='store',
                          help='Pipeline for downloading the data:\n'
-                              'download unzip clean: (default) download and unzip and then deleted the compressed file')
+                              'download extract clean: (default) Download, extract and then delete the compressed file')
 _arg_parser.add_argument('--cache', default=root_dir + '/.tmp', type=str, action='store',
                          help='Directory to store the zipped file (default = $GALACTIC_ROOT)/.tmp')
 _arg_parser.add_argument('--output', default=root_dir, type=str, action='store',
@@ -63,14 +63,14 @@ def main():
                 file_url = download_url % file2id[file]
                 print 'Downloading:%s\nFrom:%s\nTo:%s' % (file, file_url, file_path)
                 call('curl %s > %s' % (file_url, file_path), shell=True)
-    if 'unzip' in _args.pipeline:
+    if 'extract' in _args.pipeline:
         call('mkdir -p %s' % _args.output, shell=True)
         for file in tar_files:
             print 'Unzipping %s' % file
             call('tar -xvf %s -C %s' % (file, _args.output), shell=True)
-    if 'clean' in _args.pipeline:
-        print 'Deleting: %s' % _args.cache
-        call('rm -r %s' % _args.cache, shell=True)
+        if 'clean' in _args.pipeline:
+            print 'Deleting: %s' % _args.cache
+            call('rm -r %s' % _args.cache, shell=True)
 
 
 if __name__ == "__main__": main()
