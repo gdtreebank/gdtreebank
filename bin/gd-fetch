@@ -17,7 +17,7 @@ root_dir = os.environ.get('GALACTIC_ROOT', '.')
 _arg_parser = argparse.ArgumentParser()
 _arg_parser.add_argument('--substrate', default=['ALL'], nargs='+', type=str, action='store',
                          help='List of subtrate languages to be downloaded:\n'
-                              'ALL: (default) Download all languages (Warning: This yields 80G compressed file and 700+G after extraction).\n'
+                              'ALL: (default) Download all languages (Warning: This yields 70+G compressed file and 700+G after extraction).\n'
                               'GD_Language1 ... GD_LanguageN: Download GD_Langugage1 to GD_LanguageN\n'
                               'if it is GD_Language.tar.bz2, it is a specific file. See http://dx.doi.org/10.7910/DVN/8ZT5KF for the full file list.\n'
                               'Otherwise, it will be the full set of GD_Language')
