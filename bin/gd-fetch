@@ -28,7 +28,7 @@ _arg_parser.add_argument('--pipeline', default=['download', 'extract', 'clean'],
                          help='Pipeline for downloading the data:\n'
                               'download extract clean: (default) Download, extract and then delete the compressed file')
 _arg_parser.add_argument('--cache', default=root_dir + '/.tmp', type=str, action='store',
-                         help='Directory to store the zipped file (default = $GALACTIC_ROOT)/.tmp')
+                         help='Directory to store the compressed files (default = $GALACTIC_ROOT)/.tmp')
 _arg_parser.add_argument('--output', default=root_dir, type=str, action='store',
                          help='Directory to store the data (default = $GALACTIC_ROOT))')
 _args = _arg_parser.parse_args()
