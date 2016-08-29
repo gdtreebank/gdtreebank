@@ -15,6 +15,7 @@ from subprocess import call
 from argparse import RawTextHelpFormatter
 
 root_dir = os.environ.get('GALACTIC_ROOT', '.')
+_GD_VERSION_ = 1.0
 _arg_parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter)
 _arg_parser.add_argument('--substrate', default=['ALL'], nargs='+', type=str, action='store',
                          help='List of subtrate languages to be downloaded:\n'
@@ -35,7 +36,7 @@ _args = _arg_parser.parse_args()
 
 
 def main():
-    url = 'https://dataverse.harvard.edu/api/datasets/:persistentId?persistentId=doi:10.7910/DVN/8ZT5KF'
+    url = 'https://dataverse.harvard.edu/api/datasets/:persistentId?persistentId=doi:10.7910/DVN/8ZT5KF&version=%s' % _GD_VERSION_
     metadata = json.load(urllib2.urlopen(url))
 
     def _to_uni(s):
