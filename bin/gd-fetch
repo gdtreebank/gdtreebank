@@ -15,11 +15,11 @@ from subprocess import call
 from argparse import RawTextHelpFormatter
 
 root_dir = os.environ.get('GALACTIC_ROOT', '.')
-_GD_VERSION_ = 1.0
+_VER_ = '1.0'
 _arg_parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter)
 _arg_parser.add_argument('--substrate', default=['ALL'], nargs='+', type=str, action='store',
                          help='List of subtrate languages to be downloaded:\n'
-                              'ALL: (default) Download all languages (Warning: This yields 70+G compressed file\n' 
+                              'ALL: (default) Download all languages (Warning: This yields 70+G compressed file\n'
                               '     and 700+G after extraction).\n'
                               'GD_Language1 ... GD_LanguageN: Download GD_Langugage1 to GD_LanguageN. If it\n'
                               '                               is GD_Language.tar.bz2, it is a specific file.\n'
@@ -36,7 +36,7 @@ _args = _arg_parser.parse_args()
 
 
 def main():
-    url = 'https://dataverse.harvard.edu/api/datasets/:persistentId?persistentId=doi:10.7910/DVN/8ZT5KF&version=%s' % _GD_VERSION_
+    url = 'https://dataverse.harvard.edu/api/datasets/:persistentId?persistentId=doi:10.7910/DVN/8ZT5KF&version=%s' % _VER_
     metadata = json.load(urllib2.urlopen(url))
 
     def _to_uni(s):
@@ -56,9 +56,11 @@ def main():
                 file_set.update(filter(lambda x: p.match(x), file2id.keys()))
     download_url = 'https://dataverse.harvard.edu/api/access/datafile/%i'
     call('mkdir -p %s' % _args.cache, shell=True)
+    version_compress = os.path.join(_args.cache, 'V%s' % _VER_)
+    call('mkdir -p %s' % version_compress, shell=True)
     tar_files = []
     for file in file_set:
-        file_path = os.path.join(_args.cache, file)
+        file_path = os.path.join(version_compress, file)
         tar_files += [file_path]
         if 'download' in _args.pipeline:
             if os.path.isfile(file_path):
@@ -69,12 +71,16 @@ def main():
                 call('curl %s > %s' % (file_url, file_path), shell=True)
     if 'extract' in _args.pipeline:
         call('mkdir -p %s' % _args.output, shell=True)
+        version_gd = os.path.join(_args.output, 'treebanks-V%s' % _VER_)
+        call('mkdir -p %s' % version_gd, shell=True)
         for file in tar_files:
             print 'Unzipping %s' % file
-            call('tar -xvf %s -C %s' % (file, _args.output), shell=True)
+            call('tar -xvf %s -C %s' % (file, version_gd), shell=True)
         if 'clean' in _args.pipeline:
-            print 'Deleting: %s' % _args.cache
-            call('rm -r %s' % _args.cache, shell=True)
+            print 'Deleting: %s' % version_compress
+            call('rm -r %s' % version_compress, shell=True)
+            if os.listdir(_args.cache) == []:
+                call('rm -r %s' % _args.cache, shell=True)
 
 
 if __name__ == "__main__": main()
