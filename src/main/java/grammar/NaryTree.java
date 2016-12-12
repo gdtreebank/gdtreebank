@@ -1,7 +1,7 @@
 package grammar;
 
 import edu.jhu.prim.util.Lambda;
-import edu.jhu.util.files.Files;
+import edu.jhu.pacaya.util.files.QFiles;
 import org.apache.commons.lang3.StringUtils;
 import util.Constant;
 
@@ -323,9 +323,9 @@ public class NaryTree {
      * start/end fields.
      */
     public static NaryTree readTreeInPtbFormat(Reader reader) throws IOException {
-        Files.readUntilCharacter(reader, '(');
+        QFiles.readUntilCharacter(reader, '(');
         NaryTree root = readSubtreeInPtbFormat(reader);
-        Files.readUntilCharacter(reader, ')');
+        QFiles.readUntilCharacter(reader, ')');
         if (root == null) return null;
         root.updateStartEnd();
         return root;
