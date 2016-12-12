@@ -1,6 +1,6 @@
 package util;
 
-import edu.jhu.util.Alphabet;
+import edu.jhu.prim.bimap.IntObjectBimap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -108,7 +108,7 @@ public class Util {
     }
 
 
-    public static Map<Integer, Double> toIntegerMap(Map<String, Double> stringMap, Alphabet<String> alphabet) {
+    public static Map<Integer, Double> toIntegerMap(Map<String, Double> stringMap, IntObjectBimap<String> alphabet) {
         Map<Integer, Double> integerMap = new HashMap<>();
         for (Entry<String, Double> entry : stringMap.entrySet())
             integerMap.put(alphabet.lookupIndex(entry.getKey()), entry.getValue());
@@ -116,14 +116,14 @@ public class Util {
 
     }
 
-    public static void loadAlphabet(File file, Alphabet<String> alphabet) throws FileNotFoundException {
+    public static void loadAlphabet(File file, IntObjectBimap<String> alphabet) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
         while (scanner.hasNext())
             alphabet.lookupIndex(scanner.nextLine().trim());
         scanner.close();
     }
 
-    public static void saveAlphabet(File file, Alphabet<String> alphabet) throws IOException {
+    public static void saveAlphabet(File file, IntObjectBimap<String> alphabet) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
         for (String feat : alphabet.getObjects())
             bufferedWriter.write(feat + "\n");

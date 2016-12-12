@@ -1,6 +1,6 @@
 package util;
 
-import edu.jhu.util.cli.Opt;
+import edu.jhu.pacaya.util.cli.Opt;
 
 import java.io.File;
 import java.util.HashSet;

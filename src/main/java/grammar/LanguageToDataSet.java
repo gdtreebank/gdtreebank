@@ -1,9 +1,9 @@
 package grammar;
 
 import datagen.GalacticGen;
-import edu.jhu.gm.feat.FeatureVector;
+import edu.jhu.pacaya.gm.feat.FeatureVector;
+import edu.jhu.prim.bimap.IntObjectBimap;
 import edu.jhu.prim.util.Lambda;
-import edu.jhu.util.Alphabet;
 import maxent.DataSet;
 import maxent.Features;
 import maxent.Instance;
@@ -69,7 +69,7 @@ public class LanguageToDataSet {
         }
     }
 
-    public static DataSet languagesToDataSetFast(TreeBank treeBank, Alphabet<String> featAlphabet) throws IOException {
+    public static DataSet languagesToDataSetFast(TreeBank treeBank, IntObjectBimap<String> featAlphabet) throws IOException {
         DataSet dataSet = new DataSet();
         CollectPermutation collectPermutation = new CollectPermutation();
         for (NaryTree tree : treeBank)

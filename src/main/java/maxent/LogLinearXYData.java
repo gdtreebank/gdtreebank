@@ -1,7 +1,7 @@
 package maxent;
 
-import edu.jhu.gm.feat.FeatureVector;
-import edu.jhu.util.Alphabet;
+import edu.jhu.pacaya.gm.feat.FeatureVector;
+import edu.jhu.prim.bimap.IntObjectBimap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +15,11 @@ import java.util.List;
 public class LogLinearXYData {
 
     public static class LogLinearExample {
-        private edu.jhu.gm.maxent.LogLinearXYData.LogLinearExample example;
+        private edu.jhu.pacaya.gm.maxent.LogLinearXYData.LogLinearExample example;
         private int numYs;
 
         public LogLinearExample(double weight, int x, int y, FeatureVector[] fvs) {
-            example = new edu.jhu.gm.maxent.LogLinearXYData.LogLinearExample(weight, x, y, fvs);
+            example = new edu.jhu.pacaya.gm.maxent.LogLinearXYData.LogLinearExample(weight, x, y, fvs);
             numYs = fvs.length;
         }
 
@@ -35,7 +35,7 @@ public class LogLinearXYData {
             return example.getY();
         }
 
-        public edu.jhu.gm.maxent.LogLinearXYData.LogLinearExample getExample() {
+        public edu.jhu.pacaya.gm.maxent.LogLinearXYData.LogLinearExample getExample() {
             return example;
 
         }
@@ -47,10 +47,10 @@ public class LogLinearXYData {
     }
 
     private List<LogLinearExample> exList;
-    private Alphabet<String> featureAlphabet;
+    private IntObjectBimap<String> featureAlphabet;
 
 
-    public LogLinearXYData(Alphabet<String> featureAlphabet) {
+    public LogLinearXYData(IntObjectBimap<String> featureAlphabet) {
         this.featureAlphabet = featureAlphabet;
         this.exList = new ArrayList<>();
     }
@@ -76,7 +76,7 @@ public class LogLinearXYData {
         return exList.get(i);
     }
 
-    public Alphabet<String> getFeatureAlphabet() {
+    public IntObjectBimap<String> getFeatureAlphabet() {
         return featureAlphabet;
     }
 

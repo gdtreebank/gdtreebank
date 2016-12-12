@@ -1,17 +1,17 @@
 package util;
 
-import edu.jhu.gm.inf.BruteForceInferencer.BruteForceInferencerPrm;
-import edu.jhu.gm.train.CrfTrainer.CrfTrainerPrm;
-import edu.jhu.gm.train.CrfTrainer.Trainer;
+import edu.jhu.pacaya.gm.inf.BruteForceInferencer.BruteForceInferencerPrm;
+import edu.jhu.pacaya.gm.train.CrfTrainer.CrfTrainerPrm;
+import edu.jhu.pacaya.gm.train.CrfTrainer.Trainer;
 import edu.jhu.hlt.optimize.*;
 import edu.jhu.hlt.optimize.AdaDelta.AdaDeltaPrm;
 import edu.jhu.hlt.optimize.BottouSchedule.BottouSchedulePrm;
 import edu.jhu.hlt.optimize.SGD.SGDPrm;
 import edu.jhu.hlt.optimize.function.DifferentiableFunction;
 import edu.jhu.hlt.optimize.functions.L2;
-import edu.jhu.nlp.joint.JointNlpRunner.RegularizerType;
-import edu.jhu.util.cli.Opt;
-import edu.jhu.util.semiring.Algebras;
+import edu.jhu.pacaya.util.cli.Opt;
+import edu.jhu.pacaya.util.semiring.Algebras;
+import edu.jhu.pacaya.util.semiring.LogSemiring;
 import org.apache.commons.cli.ParseException;
 
 import java.util.Date;
@@ -22,6 +22,8 @@ import java.util.Date;
 public class OptWrapper {
 
     public enum Optimizer {LBFGS, QN, SGD, ADAGRAD, ADAGRAD_COMID, ADADELTA, FOBOS, ASGD}
+
+    public static enum RegularizerType {L2, NONE}
 
     @Opt(hasArg = true, description = "Number of threads for training")
     public static int threads = 10;
@@ -64,7 +66,7 @@ public class OptWrapper {
 
     public static CrfTrainerPrm getCrfTrainerPrm() throws ParseException {
         CrfTrainerPrm prm = new CrfTrainerPrm();
-        prm.infFactory = new BruteForceInferencerPrm(Algebras.LOG_SEMIRING);
+        prm.infFactory = new BruteForceInferencerPrm(LogSemiring.getInstance());
 
         if (optimizer == Optimizer.LBFGS) {
             prm.optimizer = getMalletLbfgs();
@@ -141,8 +143,6 @@ public class OptWrapper {
             prm.regularizer = null;
         }
 
-        prm.numThreads = threads;
-        prm.useMseForValue = false;
         prm.trainer = Trainer.CLL;
 
         return prm;

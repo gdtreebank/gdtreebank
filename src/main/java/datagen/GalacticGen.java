@@ -1,12 +1,12 @@
 package datagen;
 
-import edu.jhu.gm.maxent.LogLinearXY.LogLinearXYPrm;
-import edu.jhu.util.Alphabet;
-import edu.jhu.util.Prng;
-import edu.jhu.util.Threads;
-import edu.jhu.util.cli.ArgParser;
-import edu.jhu.util.cli.Opt;
-import edu.jhu.util.report.ReporterManager;
+import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
+import edu.jhu.prim.bimap.IntObjectBimap;
+import edu.jhu.prim.util.random.Prng;
+import edu.jhu.pacaya.util.Threads;
+import edu.jhu.pacaya.util.cli.ArgParser;
+import edu.jhu.pacaya.util.cli.Opt;
+import edu.jhu.pacaya.util.report.ReporterManager;
 import grammar.LanguageToDataSet;
 import grammar.TreeBank;
 import maxent.Model;
@@ -87,10 +87,9 @@ public class GalacticGen {
         treeBank.readTreesInUniversalConLLFormat(inputTB);
         treeBank.cut(Constant.numSentencesPerTB);
         LogLinearXYPrm prm = new LogLinearXYPrm();
-        prm.l2Variance = OptWrapper.l2variance;
         prm.crfPrm = OptWrapper.getCrfTrainerPrm();
         Model model = new Model(prm);
-        Alphabet<String> featAlphabet = model.getFeatureAlphabet();
+        IntObjectBimap<String> featAlphabet = model.getFeatureAlphabet();
         log.info("Loading data....");
         DataSet trainData = LanguageToDataSet.languagesToDataSetFast(treeBank, featAlphabet);
         log.info("Training");
@@ -129,7 +128,7 @@ public class GalacticGen {
         Constant.srcName = inputTB.getName();
         inputTreeBank.readTreesInUniversalConLLFormat(Constant.numSentencesPerTB, inputTB);
         // Permute Training data
-        TreeBank permutedTreeBank = permute_model.size() > 0 ? inputTreeBank.permuteV5(Prng.javaRandom, permute_model) : inputTreeBank;
+        TreeBank permutedTreeBank = permute_model.size() > 0 ? inputTreeBank.permuteV5(Prng.getRandom(), permute_model) : inputTreeBank;
         // Save to train file
         permutedTreeBank.writeLabelled(outputTB);
     }

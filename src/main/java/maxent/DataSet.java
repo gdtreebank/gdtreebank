@@ -1,13 +1,13 @@
 package maxent;
 
-import edu.jhu.util.Alphabet;
+import edu.jhu.prim.bimap.IntObjectBimap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DataSet implements Iterable<Instance> {
 
-    private Alphabet<String> featureAlphabet;
+    private IntObjectBimap<String> featureAlphabet;
     private ArrayList<Instance> instances;
 
     public DataSet() {
@@ -22,11 +22,11 @@ public class DataSet implements Iterable<Instance> {
         return instances.size();
     }
 
-    public void setFeatureAlphabet(Alphabet<String> featureAlphabet) {
+    public void setFeatureAlphabet(IntObjectBimap<String> featureAlphabet) {
         this.featureAlphabet = featureAlphabet;
     }
 
-    public Alphabet<String> getFeatureAlphabet() {
+    public IntObjectBimap<String> getFeatureAlphabet() {
         return featureAlphabet;
     }
 

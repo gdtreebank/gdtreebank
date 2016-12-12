@@ -1,11 +1,11 @@
 package maxent;
 
-import edu.jhu.gm.feat.FeatureVector;
-import edu.jhu.gm.maxent.LogLinearXY.LogLinearXYPrm;
-import edu.jhu.gm.model.FgModel;
-import edu.jhu.gm.model.VarTensor;
+import edu.jhu.pacaya.gm.feat.FeatureVector;
+import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
+import edu.jhu.pacaya.gm.model.FgModel;
+import edu.jhu.pacaya.gm.model.VarTensor;
+import edu.jhu.prim.bimap.IntObjectBimap;
 import edu.jhu.prim.vector.IntDoubleVector;
-import edu.jhu.util.Alphabet;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ public class CrfLogisticRegression {
         return model.getParams();
     }
 
-    public void initModel(Alphabet<String> featureAlphabet, Map<String, Double> loadedModelParams) {
+    public void initModel(IntObjectBimap<String> featureAlphabet, Map<String, Double> loadedModelParams) {
         model = maxent.load(featureAlphabet, loadedModelParams);
     }
 

@@ -1,8 +1,8 @@
 package maxent;
 
-import edu.jhu.gm.maxent.LogLinearXY.LogLinearXYPrm;
+import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
 import edu.jhu.prim.vector.IntDoubleVector;
-import edu.jhu.util.Alphabet;
+import edu.jhu.prim.bimap.IntObjectBimap;
 import org.apache.log4j.Logger;
 import util.Constant;
 import util.Util;
@@ -23,7 +23,7 @@ public class Model implements Iterable<Entry<String, Double>> {
 
     private static final Logger log = Logger.getLogger(Model.class);
     private CrfLogisticRegression crfLogisticRegression;
-    private Alphabet<String> ruleAlphabet, corpusAlphabet, featureAlphabet;
+    private IntObjectBimap<String> ruleIntObjectBimap, corpusIntObjectBimap, featureIntObjectBimap;
     private Map<String, Double> loadedModelParams;
     private boolean trained;
 
@@ -33,24 +33,24 @@ public class Model implements Iterable<Entry<String, Double>> {
     }
 
 
-    public Alphabet<String> getFeatureAlphabet() {
-        return featureAlphabet;
+    public IntObjectBimap<String> getFeatureAlphabet() {
+        return featureIntObjectBimap;
     }
 
 
     public Model(LogLinearXYPrm prm) throws IOException {
         crfLogisticRegression = new CrfLogisticRegression(prm);
-        ruleAlphabet = new Alphabet<>();
-        corpusAlphabet = new Alphabet<>();
-        featureAlphabet = new Alphabet<>();
+        ruleIntObjectBimap = new IntObjectBimap<>();
+        corpusIntObjectBimap = new IntObjectBimap<>();
+        featureIntObjectBimap = new IntObjectBimap<>();
         loadedModelParams = new HashMap<>();
         trained = false;
     }
 
     public void freeze() {
-        ruleAlphabet.stopGrowth();
-        corpusAlphabet.stopGrowth();
-        featureAlphabet.stopGrowth();
+        ruleIntObjectBimap.stopGrowth();
+        corpusIntObjectBimap.stopGrowth();
+        featureIntObjectBimap.stopGrowth();
     }
 
     public void saveObj(File to) throws IOException {
@@ -94,11 +94,11 @@ public class Model implements Iterable<Entry<String, Double>> {
         loadedModelParams = new HashMap<>();
         IntDoubleVector params = crfLogisticRegression.getParams();
         for (int i = 0; i < params.getNumImplicitEntries(); ++i)
-            loadedModelParams.put(featureAlphabet.lookupObject(i), params.get(i));
+            loadedModelParams.put(featureIntObjectBimap.lookupObject(i), params.get(i));
     }
 
     private void loadModel() {
-        crfLogisticRegression.initModel(featureAlphabet, loadedModelParams);
+        crfLogisticRegression.initModel(featureIntObjectBimap, loadedModelParams);
     }
 
 }

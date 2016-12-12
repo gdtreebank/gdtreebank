@@ -1,6 +1,6 @@
 package maxent;
 
-import edu.jhu.gm.feat.FeatureVector;
+import edu.jhu.pacaya.gm.feat.FeatureVector;
 
 /**
  * A single labeled data instance for a classification or regression problem.
@@ -23,6 +23,7 @@ public class Instance {
         this.lhs = lhs;
         this.yString = yString;
     }
+
     public Instance(FeatureVector[] features, double[] weights, String[] yString) {
         this.features = features;
         this.weights = weights;

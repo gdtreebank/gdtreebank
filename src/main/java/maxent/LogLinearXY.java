@@ -1,22 +1,22 @@
 package maxent;
 
-import edu.jhu.gm.data.FgExampleList;
-import edu.jhu.gm.data.FgExampleMemoryStore;
-import edu.jhu.gm.data.LFgExample;
-import edu.jhu.gm.data.LabeledFgExample;
-import edu.jhu.gm.decode.MbrDecoder;
-import edu.jhu.gm.decode.MbrDecoder.MbrDecoderPrm;
-import edu.jhu.gm.feat.FeatureVector;
-import edu.jhu.gm.feat.StringIterable;
-import edu.jhu.gm.inf.BeliefPropagation.BeliefPropagationPrm;
-import edu.jhu.gm.inf.BeliefPropagation.BpScheduleType;
-import edu.jhu.gm.inf.BeliefPropagation.BpUpdateOrder;
-import edu.jhu.gm.maxent.LogLinearXY.LogLinearXYPrm;
-import edu.jhu.gm.model.*;
-import edu.jhu.gm.model.Var.VarType;
-import edu.jhu.gm.train.CrfTrainer;
-import edu.jhu.hlt.optimize.functions.L2;
-import edu.jhu.util.Alphabet;
+import edu.jhu.pacaya.gm.data.FgExampleList;
+import edu.jhu.pacaya.gm.data.FgExampleMemoryStore;
+import edu.jhu.pacaya.gm.data.LFgExample;
+import edu.jhu.pacaya.gm.data.LabeledFgExample;
+import edu.jhu.pacaya.gm.decode.MbrDecoder;
+import edu.jhu.pacaya.gm.decode.MbrDecoder.MbrDecoderPrm;
+import edu.jhu.pacaya.gm.feat.FeatureVector;
+import edu.jhu.pacaya.gm.feat.StringIterable;
+import edu.jhu.pacaya.gm.inf.BeliefPropagation.BeliefPropagationPrm;
+import edu.jhu.pacaya.gm.inf.BeliefPropagation.BpScheduleType;
+import edu.jhu.pacaya.gm.inf.BeliefPropagation.BpUpdateOrder;
+import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
+import edu.jhu.pacaya.gm.model.*;
+import edu.jhu.pacaya.gm.model.Var.VarType;
+import edu.jhu.pacaya.gm.train.CrfTrainer;
+import edu.jhu.pacaya.util.semiring.LogSemiring;
+import edu.jhu.prim.bimap.IntObjectBimap;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -39,12 +39,12 @@ public class LogLinearXY {
         this.prm = prm;
     }
 
-    private Alphabet<String> alphabet = null;
+    private IntObjectBimap<String> alphabet = null;
 
     private Map<Integer, List<String>> stateNamesMap;
 
 
-    public FgModel load(Alphabet<String> featureAlphabet, Map<String, Double> param2Weights) {
+    public FgModel load(IntObjectBimap<String> featureAlphabet, Map<String, Double> param2Weights) {
         alphabet = featureAlphabet;
         stateNamesMap = new HashMap<>();
         FgModel model = new FgModel(featureAlphabet.size(), new StringIterable(featureAlphabet.getObjects()));
@@ -64,24 +64,18 @@ public class LogLinearXY {
      * @return Trained model.
      */
     public FgModel train(LogLinearXYData data, FgModel model) {
-        Alphabet<String> alphabet = data.getFeatureAlphabet();
+        IntObjectBimap<String> alphabet = data.getFeatureAlphabet();
         if (this.alphabet == null) {
             this.alphabet = alphabet;
             this.stateNamesMap = new HashMap<>();
         }
         FgExampleList list = getData(data);
         log.info("Number of train instances: " + list.size());
-
-        if (prm.l2Variance == -1) {
-            prm.crfPrm.regularizer = new L2(list.size());
-        } else {
-            prm.crfPrm.regularizer = new L2(prm.l2Variance);
-        }
         log.info("Number of model parameters: " + alphabet.size());
         if (model == null)
             model = new FgModel(alphabet.size(), new StringIterable(alphabet.getObjects()));
         CrfTrainer trainer = new CrfTrainer(prm.crfPrm);
-        trainer.train(model, list);
+        trainer.train(model, list, null);
         return model;
     }
 
@@ -159,7 +153,7 @@ public class LogLinearXY {
 
     private BeliefPropagationPrm getBpPrm() {
         BeliefPropagationPrm bpPrm = new BeliefPropagationPrm();
-        bpPrm.logDomain = true;
+        bpPrm.s = LogSemiring.getInstance();
         bpPrm.schedule = BpScheduleType.TREE_LIKE;
         bpPrm.updateOrder = BpUpdateOrder.SEQUENTIAL;
         bpPrm.normalizeMessages = false;
