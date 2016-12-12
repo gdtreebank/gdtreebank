@@ -3,7 +3,6 @@ package maxent;
 import edu.jhu.pacaya.gm.feat.FeatureVector;
 import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
 import edu.jhu.pacaya.gm.model.FgModel;
-import edu.jhu.pacaya.gm.model.VarTensor;
 import edu.jhu.prim.bimap.IntObjectBimap;
 import edu.jhu.prim.vector.IntDoubleVector;
 import org.apache.log4j.Logger;

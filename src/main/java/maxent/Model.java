@@ -1,14 +1,15 @@
 package maxent;
 
 import edu.jhu.pacaya.gm.maxent.LogLinearXY.LogLinearXYPrm;
-import edu.jhu.prim.vector.IntDoubleVector;
 import edu.jhu.prim.bimap.IntObjectBimap;
+import edu.jhu.prim.vector.IntDoubleVector;
 import org.apache.log4j.Logger;
 import util.Constant;
-import util.Util;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPOutputStream;
 

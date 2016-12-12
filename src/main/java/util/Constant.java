@@ -2,12 +2,6 @@ package util;
 
 import edu.jhu.pacaya.util.cli.Opt;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by dqwang on 14/12/2.
  */

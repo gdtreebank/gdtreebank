@@ -1,16 +1,15 @@
 package util;
 
-import edu.jhu.pacaya.gm.inf.BruteForceInferencer.BruteForceInferencerPrm;
-import edu.jhu.pacaya.gm.train.CrfTrainer.CrfTrainerPrm;
-import edu.jhu.pacaya.gm.train.CrfTrainer.Trainer;
 import edu.jhu.hlt.optimize.*;
 import edu.jhu.hlt.optimize.AdaDelta.AdaDeltaPrm;
 import edu.jhu.hlt.optimize.BottouSchedule.BottouSchedulePrm;
 import edu.jhu.hlt.optimize.SGD.SGDPrm;
 import edu.jhu.hlt.optimize.function.DifferentiableFunction;
 import edu.jhu.hlt.optimize.functions.L2;
+import edu.jhu.pacaya.gm.inf.BruteForceInferencer.BruteForceInferencerPrm;
+import edu.jhu.pacaya.gm.train.CrfTrainer.CrfTrainerPrm;
+import edu.jhu.pacaya.gm.train.CrfTrainer.Trainer;
 import edu.jhu.pacaya.util.cli.Opt;
-import edu.jhu.pacaya.util.semiring.Algebras;
 import edu.jhu.pacaya.util.semiring.LogSemiring;
 import org.apache.commons.cli.ParseException;
 

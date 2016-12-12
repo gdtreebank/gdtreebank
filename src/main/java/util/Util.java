@@ -1,14 +1,11 @@
 package util;
 
 import edu.jhu.prim.bimap.IntObjectBimap;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by dqwang on 14/11/21.

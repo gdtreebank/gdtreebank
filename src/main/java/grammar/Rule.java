@@ -1,11 +1,5 @@
 package grammar;
 
-import util.Constant;
-import maxent.Features;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by dqwang on 2/19/15.
  */

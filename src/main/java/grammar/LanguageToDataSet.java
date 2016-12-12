@@ -8,9 +8,11 @@ import maxent.DataSet;
 import maxent.Features;
 import maxent.Instance;
 import org.apache.log4j.Logger;
-import util.*;
+import util.Constant;
+import util.Util;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
