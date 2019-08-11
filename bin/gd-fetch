@@ -68,7 +68,7 @@ def main():
             else:
                 file_url = download_url % file2id[file]
                 print 'Downloading:%s\nFrom:%s\nTo:%s' % (file, file_url, file_path)
-                call('curl %s > %s' % (file_url, file_path), shell=True)
+                call('wget %s -O %s' % (file_url, file_path), shell=True)
     if 'extract' in _args.pipeline:
         call('mkdir -p %s' % _args.output, shell=True)
         version_gd = os.path.join(_args.output, 'treebanks-V%s' % _VER_)
